@@ -137,6 +137,29 @@
     });
   });
 
+  // Form PHP
+  $('form').on('submit', function (e) {
+    var isValidForm = anyValid($(".validate"));
+
+    if(!isValidForm) {
+      return;
+    }
+
+    $('.submit-button').css("display", "none")
+    $('.loading').css("display", "block");
+    e.preventDefault();
+    $.ajax({
+      type: 'post',
+      url: 'contact.php',
+      data: $('form').serialize(),
+      success: function () {
+        $('.loading').css("display", "none");
+        $('form')[0].reset();
+        $('.sent-message').css("display", "block");
+      }
+    });
+  });
+
   // Init AOS
   function aos_init() {
     AOS.init({
@@ -150,3 +173,13 @@
   });
 
 })(jQuery);
+
+function anyValid(array) {
+  for(var i =0; i < array.length; i++) {
+    if(array[i].innerHTML.length > 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
